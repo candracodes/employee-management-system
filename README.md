@@ -17,18 +17,10 @@ This is a command-line application that manages a company's employee database, u
 ## URLs
 - [GitHub Repo URL](https://github.com/candracodes/employee-management-system)
 - [Walk Through Video](#)
-
-## Foreword
-
-- This application aims to accomplish the following:
-  - [Adhere to the Acceptance Criteria](./assets/README.md)
-  - TBD
-  - TBD
-  - TBD
+- [Full Acceptance Criteria](./assets/README.md)
 
 ## Usage
-
-- TBD
+- This application is invoked running `node server.js` into the command line
 
 ## User-Story
 
@@ -62,18 +54,19 @@ THEN I am prompted to select an employee to update and their new role and this i
 
 ## Mock-Up
 
-* This application should resemble the following screenshots and video walk-through:
+* This application should resemble the following screenshots and video example:
 
 ![Screenshot 1](./assets/12-sql-homework-demo-01.png)
-![Screenshot 2](./assets/12-sql-homework-video-thumbnail.png)
+[![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./assets/12-sql-homework-video-thumbnail.png)](https://2u-20.wistia.com/medias/2lnle7xnpk)
 
 ## Frameworks
 
 The project is created using the following frameworks and packages
 
 - [Node.JS](https://nodejs.org/en/)
-- [MySQL2](#)
-- [Inquirer](#)
+- [MySQL2](https://www.npmjs.com/package/mysql2)
+- [Inquirer](https://www.npmjs.com/package/inquirer)
+- [Console.Table](https://www.npmjs.com/package/console.table)
 
 ## Licensing
 The project is made possible with the following Licensing:
