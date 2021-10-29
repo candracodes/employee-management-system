@@ -37,7 +37,6 @@ function startApp() {
       ]
     }])
     .then(function (answer) {
-      console.log("HEY, this is something");
       switch (answer.choice) {
         case "View All Employees":
           viewAllEmployees();
@@ -110,9 +109,12 @@ function viewAllRoles() {
 };
 
 // TODO: addEmployee()
+
 function addEmployee() {
-  console.log("addEmployee function has been triggered");
-  // CREATE QUESTIONS FOR PROMPT
+  //Make SQL statement:
+  let sql = "INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ?";
+
+  // Questions
   let questions = [
     {
       type: "input",
@@ -135,23 +137,27 @@ function addEmployee() {
       name: "manager_id"
     }
   ];
-  inquirer.prompt(questions).then(function(answer) {
-    // TODO: Find out why this isn't actually inserting into employee table
-    db.query(
-      "INSERT INTO employee SET ?",
-      {
-        first_name: answer.first_name,
-        last_name: answer.last_name,
-        roles_id: answer.roles_id,
-        manager_id: answer.manager_id,
-      },
-      function(error) {
-        if (error) throw error;
-        console.log("Successfully added new employee!");
-        startApp();
-      }
-    );
+
+  //Make an array of values:
+  // let values = [
+  //   [`first_name`, questions.first_name],
+  //   [`last_name`, questions.last_name],
+  //   [`roles_id`, questions.roles_id],
+  //   [`manager_id`, questions.manager_id],
+  // ];
+  let values = [
+    ["John"],
+    ["Jacob"],
+    [1],
+    [1],
+  ];
+
+  //Execute the SQL statement, with the value array:
+  db.query(sql, [values], function (err, result) {
+    if (err) throw err;
+    console.log("Number of records inserted: " + result.affectedRows);
   });
+  
 };
 
 // TODO: updateEmployee()
