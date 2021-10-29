@@ -138,24 +138,17 @@ function addEmployee() {
     }
   ];
 
+  //TODO: this is hard-coded right now. Revisit and make this dynamic from the prompt answers
   //Make an array of values:
-  // let values = [
-  //   [`first_name`, questions.first_name],
-  //   [`last_name`, questions.last_name],
-  //   [`roles_id`, questions.roles_id],
-  //   [`manager_id`, questions.manager_id],
-  // ];
   let values = [
-    ["John"],
-    ["Jacob"],
-    [1],
-    [1],
+    ["John", "Jacob", 1, 1]
   ];
 
   //Execute the SQL statement, with the value array:
-  db.query(sql, [values], function (err, result) {
+  db.query(sql, [values], function (err, res) {
     if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
+    console.table(res);
+    startApp();
   });
   
 };
