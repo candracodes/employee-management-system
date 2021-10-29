@@ -72,7 +72,7 @@ function startApp() {
 function viewAllEmployees() {
   db.query(
     "SELECT employee.employee_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
-    
+
     function (err, res) {
       if (err) throw err;
       console.table(res);
@@ -99,7 +99,7 @@ function viewAllRoles() {
   console.log("viewAllRoles function has been triggered")
   db.query(
     "SELECT * FROM roles;",
-    
+
     function (err, res) {
       if (err) throw err;
       console.table(res);
@@ -109,14 +109,55 @@ function viewAllRoles() {
 };
 
 // TODO: addEmployee()
+// function addEmployee() {
+//   //Make SQL statement:
+//   let sql = "INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ?";
+
+//   // Questions
+//   let questions = [
+//     {
+//       type: "input",
+//       message: "What's the employee's first name?",
+//       name: "first_name"
+//     },
+//     {
+//       type: "input",
+//       message: "What's the employee's last name?",
+//       name: "last_name"
+//     },
+//     {
+//       type: "input",
+//       message: "What is the ID of this employee's title (role_id)?",
+//       name: "roles_id"
+//     },
+//     {
+//       type: "input",
+//       message: "What is the ID of this employee's manager (manager_id)?",
+//       name: "manager_id"
+//     }
+//   ];
+
+//   //TODO: this is hard-coded right now. Revisit and make this dynamic from the prompt answers
+//   //Make an array of values:
+//   let values = [
+//     ["John", "Jacob", 1, 1]
+//   ];
+
+//   //Execute the SQL statement, with the value array:
+//   db.query(sql, [values], function (err, res) {
+//     if (err) throw err;
+//     console.table(res);
+//     startApp();
+//   });
+
+// };
 
 function addEmployee() {
   //Make SQL statement:
   let sql = "INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ?";
 
   // Questions
-  let questions = [
-    {
+  let questions = [{
       type: "input",
       message: "What's the employee's first name?",
       name: "first_name"
@@ -144,13 +185,16 @@ function addEmployee() {
     ["John", "Jacob", 1, 1]
   ];
 
-  //Execute the SQL statement, with the value array:
-  db.query(sql, [values], function (err, res) {
-    if (err) throw err;
-    console.table(res);
-    startApp();
+  // INQUIRER QUESTIONS
+  inquirer.prompt(questions).then(function (res) {
+    //Execute the SQL statement, with the value array:
+    db.query(sql, [values], function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      startApp();
+    });
   });
-  
+
 };
 
 // TODO: updateEmployee()
@@ -180,13 +224,12 @@ function addDepartment() {
       message: "What is the name of this new department?",
       name: "department"
     })
-    .then(function(answer) {
+    .then(function (answer) {
       // TODO: Figure out why this isn't inserting into db
-      db.query("INSERT INTO department SET ?",
-        {
+      db.query("INSERT INTO department SET ?", {
           name: answer.department,
         },
-        function(err, res) {
+        function (err, res) {
           if (err) throw err;
           startApp();
         });

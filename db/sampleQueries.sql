@@ -18,19 +18,9 @@ SELECT * FROM department;
 SELECT * FROM roles;
 
 -- ADD EMPLOYEE
--- var sql = "INSERT INTO employee (first_name, last_name, roles_id, manager_id) SET ?";
---   var values = [
---     ['John', 'Highway 71'],]
-    
-
--- con.query(sql, [values], function (err, result) {
---     if (err) throw err;
---     console.log("Number of records inserted: " + result.affectedRows);
---   });
 
 -- UPDATE EMPLOYEE
 
 -- ADD ROLE
 
 -- ADD DEPARTMENT
-INSERT INTO department SET ?
