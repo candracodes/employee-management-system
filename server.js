@@ -106,9 +106,15 @@ function updateEmployee() {
 // TODO: viewAllRoles()
 function viewAllRoles() {
   console.log("viewAllRoles function has been triggered")
-  // Prompt viewAllRoles related questions
-  // Run a query 
-  // Return console.table response
+  db.query(
+    "SELECT * FROM roles;",
+    
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      startApp();
+    }
+  );
 };
 
 // TODO: addRole()
@@ -122,9 +128,14 @@ function addRole() {
 // TODO: viewAllDepartments()
 function viewAllDepartments() {
   console.log("viewAllDepartments function has been triggered")
-  // Prompt viewAllDepartments related questions
-  // Run a query 
-  // Return console.table response
+  db.query(
+    "SELECT * FROM department;",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      startApp();
+    }
+  );
 };
 
 // TODO: addDepartment()
