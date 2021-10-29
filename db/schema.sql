@@ -11,7 +11,8 @@ CREATE TABLE department (
 
 -- TODO: I'm changing this table to "company_role" because for some reason "role" is highlighted... as if it is a global attribute. --
 CREATE TABLE company_role (
-    id INT NOT NULL AUTO_INCREMENT,
+    -- id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL,
     title VARCHAR(30) NOT NULL,
     salary DEC(7,2) NOT NULL,
     department_id INT,
