@@ -77,7 +77,7 @@ function startApp() {
 // TODO: viewAllEmployees()
 function viewAllEmployees() {
   db.query(
-    "SELECT employee.id, employee.first_name, employee.last_name FROM employee INNER JOIN company_role ON employee.role_id = company_role.id;",
+    "SELECT employee.employee_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
     
     function (err, res) {
       if (err) throw err;

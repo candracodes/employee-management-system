@@ -5,30 +5,27 @@ CREATE DATABASE company_db;
 USE company_db;
 
 CREATE TABLE department (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  department_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) NOT NULL
 );
 
--- TODO: I'm changing this table to "company_role" because for some reason "role" is highlighted... as if it is a global attribute. --
-CREATE TABLE company_role (
-    -- id INT NOT NULL AUTO_INCREMENT,
-    id INT NOT NULL,
+-- TODO: I'm changing this table to "roles" because for some reason "role" is highlighted... as if it is a global attribute. --
+CREATE TABLE roles (
+    roles_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DEC(7,2) NOT NULL,
     department_id INT,
-    PRIMARY KEY (id),
-    FOREIGN KEY (department_id) REFERENCES department(id)
+    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE SET NULL
 );
 
 CREATE TABLE employee (
-    id INT NOT NULL AUTO_INCREMENT,
+    employee_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    role_id INT,
+    roles_id INT, 
+    FOREIGN KEY (roles_id) REFERENCES roles(roles_id) ON DELETE SET NULL,
     manager_id INT,
-    PRIMARY KEY (id),
-    FOREIGN KEY (role_id) REFERENCES company_role(id),
-    FOREIGN KEY (manager_id) REFERENCES employee(id)
+    FOREIGN KEY (manager_id) REFERENCES employee(employee_id) ON DELETE SET NULL
 );
 
 
