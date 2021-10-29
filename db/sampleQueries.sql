@@ -16,3 +16,12 @@ SELECT * FROM department;
 
 -- VIEW ALL ROLES
 SELECT * FROM roles;
+
+-- ADD EMPLOYEE
+
+-- UPDATE EMPLOYEE
+
+-- ADD ROLE
+
+-- ADD DEPARTMENT
+INSERT INTO department SET ?

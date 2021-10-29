@@ -67,11 +67,6 @@ function startApp() {
     });
 }
 
-// Series of initial prompts
-// exports.startApp = () => {
-
-// };
-
 // Series of follow up functions with additional prompts based on user's intial answer to "What would you like to do?"
 
 // TODO: viewAllEmployees()
@@ -87,20 +82,17 @@ function viewAllEmployees() {
   );
 };
 
-// TODO: addEmployee()
-function addEmployee() {
-  console.log("addEmployee function has been triggered")
-  // Prompt addEmployee related questions
-  // Run a query to INSERT data
-  // Return console.table response
-};
-
-// TODO: updateEmployee()
-function updateEmployee() {
-  console.log("updateEmployee function has been triggered")
-  // Prompt updateEmployee related questions
-  // Run a query 
-  // Return console.table response
+// TODO: viewAllDepartments()
+function viewAllDepartments() {
+  console.log("viewAllDepartments function has been triggered")
+  db.query(
+    "SELECT * FROM department;",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      startApp();
+    }
+  );
 };
 
 // TODO: viewAllRoles()
@@ -117,6 +109,60 @@ function viewAllRoles() {
   );
 };
 
+// TODO: addEmployee()
+function addEmployee() {
+  console.log("addEmployee function has been triggered");
+  // CREATE QUESTIONS FOR PROMPT
+  let questions = [
+    {
+      type: "input",
+      message: "What's the employee's first name?",
+      name: "first_name"
+    },
+    {
+      type: "input",
+      message: "What's the employee's last name?",
+      name: "last_name"
+    },
+    {
+      type: "input",
+      message: "What is the ID of this employee's title (role_id)?",
+      name: "roles_id"
+    },
+    {
+      type: "input",
+      message: "What is the ID of this employee's manager (manager_id)?",
+      name: "manager_id"
+    }
+  ];
+  inquirer.prompt(questions).then(function(answer) {
+    // TODO: Find out why this isn't actually inserting into employee table
+    db.query(
+      "INSERT INTO employee SET ?",
+      {
+        first_name: answer.first_name,
+        last_name: answer.last_name,
+        roles_id: answer.roles_id,
+        manager_id: answer.manager_id,
+      },
+      function(error) {
+        if (error) throw error;
+        console.log("Successfully added new employee!");
+        startApp();
+      }
+    );
+  });
+};
+
+// TODO: updateEmployee()
+function updateEmployee() {
+  console.log("updateEmployee function has been triggered")
+  // Prompt updateEmployee related questions
+  // Run a query 
+  // Return console.table response
+};
+
+
 // TODO: addRole()
 function addRole() {
   console.log("addRole function has been triggered")
@@ -125,23 +171,25 @@ function addRole() {
   // Return console.table response
 };
 
-// TODO: viewAllDepartments()
-function viewAllDepartments() {
-  console.log("viewAllDepartments function has been triggered")
-  db.query(
-    "SELECT * FROM department;",
-    function (err, res) {
-      if (err) throw err;
-      console.table(res);
-      startApp();
-    }
-  );
-};
 
 // TODO: addDepartment()
 function addDepartment() {
   console.log("addDepartment function has been triggered")
-  // Prompt addDepartment related questions
-  // Run a query 
-  // Return console.table response
+  inquirer
+    .prompt({
+      type: "input",
+      message: "What is the name of this new department?",
+      name: "department"
+    })
+    .then(function(answer) {
+      // TODO: Figure out why this isn't inserting into db
+      db.query("INSERT INTO department SET ?",
+        {
+          name: answer.department,
+        },
+        function(err, res) {
+          if (err) throw err;
+          startApp();
+        });
+    });
 };
