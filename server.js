@@ -114,22 +114,20 @@ function addEmployee() {
     if (err) throw err;
     console.log(res)
     const roles = res.map(element => element.title)
-    inquirer.prompt([
-      {
-        name: "first_name",
-        type: "input",
-        message: "What's the employee's first name?",
-      }, {
-        name: "last_name",
-        type: "input",
-        message: "What's the employee's last name?",
-      }, {
-        name: "roles",
-        type: "list",
-        message: "What is the title of their role?",
-        choices: roles
-      }
-    ]).then(answers => {
+    inquirer.prompt([{
+      name: "first_name",
+      type: "input",
+      message: "What's the employee's first name?",
+    }, {
+      name: "last_name",
+      type: "input",
+      message: "What's the employee's last name?",
+    }, {
+      name: "roles",
+      type: "list",
+      message: "What is the title of their role?",
+      choices: roles
+    }]).then(answers => {
       console.log("roles", answers.roles);
       const chosenRole = res.find(element => {
         return element.title === answers.roles
@@ -159,32 +157,22 @@ function addDepartment() {
       message: "What would you like to name the new department?",
       name: "department"
     })
-    .then(function(answer) {
-        console.log(answer.department);
-      db.query("INSERT INTO department SET ?",
-        {
+    .then(function (answer) {
+      console.log(answer.department);
+      db.query("INSERT INTO department SET ?", {
           name: answer.department,
         },
-        function(err, res) {
+        function (err, res) {
           if (err) throw err;
           startApp();
         });
     });
 };
 
-// TODO: updateEmployee()
-function updateEmployee() {
-  console.log("updateEmployee function has been triggered");
-  // Consult tutor
-
-};
-
-
-// TODO: addRole()
+// addRole() -- DONE
 function addRole() {
   console.log("addRole function has been triggered");
-  var questions = [
-    {
+  var questions = [{
       type: "input",
       message: "What type of role would you like to add?",
       name: "title"
@@ -199,18 +187,17 @@ function addRole() {
       message: "In what department is the new role?",
       name: "department_id"
     }
-    
+
   ];
-  inquirer.prompt(questions).then(function(answer) {
+  inquirer.prompt(questions).then(function (answer) {
     db.query(
-      "INSERT INTO roles SET ?",
-      {
+      "INSERT INTO roles SET ?", {
         title: answer.title,
         salary: answer.salary,
         department_id: answer.department_id
-        
+
       },
-      function(error, res) {
+      function (error, res) {
         if (error) throw error;
         console.log("New role added successfully");
         startApp();
@@ -218,3 +205,65 @@ function addRole() {
     );
   });
 };
+
+// TODO: updateEmployee()
+function updateEmployee() {
+  console.log("updateEmployee function has been triggered");
+
+  // First we must select an employee to update. To accomplish this, we need to do a few things
+  // 1) Query our database for all employees
+
+  db.query(
+    "SELECT employee.employee_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
+
+    function (err, res) {
+      if (err) throw err;
+
+      let employeeChoices = res.map((employee) => (
+        {
+          name: employee.first_name + ' ' + employee.last_name,
+          value: employee.employee_id
+        })
+      )
+      // 2) Use Inquirer to have the user select one of the employees
+      inquirer
+        .prompt({
+          type: "list",
+          message: "What is the first name of the employee you would like to access?",
+          name: "id",
+          choices: employeeChoices
+        })
+        .then(function (answer) {
+          console.log(answer.id);
+          // Next we need to select a new role for the employee. This will be similar to the last step
+          // 1) Query our database for all roles
+          db.query(
+            "SELECT employee.employee_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
+
+          function (err, res) {
+            if (err) throw err;
+      
+            let roleChoices = res.map((employee) => (
+              {
+                name: employee.roles_id,
+                id: employee.employee_id
+              })
+            )
+          // 2) Use Inquirer to have the user select a role from the list
+          inquirer
+        .prompt({
+          type: "list",
+          message: "Which role would you like to select?",
+          name: "id",
+          choices: roleChoices
+        }),
+        //The sql query might look something like "UPDATE employee SET roles_id = 2 WHERE id = 1"
+        db.query("UPDATE employee SET roles_id = ? WHERE employee_id = ?", [roleChoices.roles_id, roleChoices.employee_id])
+
+          
+        }) // end function (err,res)
+    }, 
+
+  ); // END db.query
+
+})}; 
