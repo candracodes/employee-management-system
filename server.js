@@ -68,7 +68,7 @@ function startApp() {
 
 // Series of follow up functions with additional prompts based on user's intial answer to "What would you like to do?"
 
-// TODO: viewAllEmployees()
+// viewAllEmployees() -- DONE
 function viewAllEmployees() {
   db.query(
     "SELECT employee.employee_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
@@ -81,7 +81,7 @@ function viewAllEmployees() {
   );
 };
 
-// TODO: viewAllDepartments()
+// viewAllDepartments() -- DONE
 function viewAllDepartments() {
   console.log("viewAllDepartments function has been triggered")
   db.query(
@@ -94,7 +94,7 @@ function viewAllDepartments() {
   );
 };
 
-// TODO: viewAllRoles()
+// viewAllRoles() -- DONE
 function viewAllRoles() {
   console.log("viewAllRoles function has been triggered")
   db.query(
@@ -108,7 +108,7 @@ function viewAllRoles() {
   );
 };
 
-//ADD EMPLOYEE (this approach finally works)
+// addEmployee() -- DONE
 function addEmployee() {
   db.query("SELECT * FROM roles", function (err, res) {
     if (err) throw err;
@@ -150,55 +150,8 @@ function addEmployee() {
   })
 
 };
-// TODO: updateEmployee()
-function updateEmployee() {
-  console.log("updateEmployee function has been triggered")
-  // Prompt updateEmployee related questions
-  // Run a query 
-  // Return console.table response
-};
 
-
-// TODO: addRole()
-function addRole() {
-  console.log("addRole function has been triggered")
-  // Prompt addRole related questions
-  // Run a query 
-  // Return console.table response
-};
-
-
-// TODO: addDepartment()
-// APPROACH 2 (STILL NOT WORKING)
-// function addDepartment() {
-//   db.query("SELECT * FROM department", function (err, res) {
-//     if (err) throw err;
-//     const department = res.map(element => {
-//       return element.id
-//     })
-//     inquirer
-//       .prompt([
-//         {
-//           name: "name",
-//           type: "input",
-//           message: "What is the name of this new department?",
-//         }
-
-//       ])
-//       .then(function (answer) {
-//         db.query(
-//           "INSERT INTO department SET ?",
-//           answer,
-//           function (err) {
-//             if (err) throw err;
-//             console.log(`${answer.department} was added successfully`);
-//             startApp();
-//           }
-//         );
-//       });
-//   })
-// }
-
+// addDepartment() -- DONE
 function addDepartment() {
   inquirer
     .prompt({
@@ -217,4 +170,51 @@ function addDepartment() {
           startApp();
         });
     });
+};
+
+// TODO: updateEmployee()
+function updateEmployee() {
+  console.log("updateEmployee function has been triggered");
+  // Consult tutor
+
+};
+
+
+// TODO: addRole()
+function addRole() {
+  console.log("addRole function has been triggered");
+  var questions = [
+    {
+      type: "input",
+      message: "What type of role would you like to add?",
+      name: "title"
+    },
+    {
+      type: "input",
+      message: "What is the salary for this role?",
+      name: "salary"
+    },
+    {
+      type: "input",
+      message: "In what department is the new role?",
+      name: "department_id"
+    }
+    
+  ];
+  inquirer.prompt(questions).then(function(answer) {
+    db.query(
+      "INSERT INTO roles SET ?",
+      {
+        title: answer.title,
+        salary: answer.salary,
+        department_id: answer.department_id
+        
+      },
+      function(error, res) {
+        if (error) throw error;
+        console.log("New role added successfully");
+        startApp();
+      }
+    );
+  });
 };
