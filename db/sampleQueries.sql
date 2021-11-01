@@ -24,3 +24,7 @@ SELECT * FROM roles;
 -- ADD ROLE
 
 -- ADD DEPARTMENT
+INSERT INTO department SET Sales
+
+INSERT INTO department (name) VALUES ("Sales");
+

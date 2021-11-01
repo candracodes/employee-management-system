@@ -108,67 +108,18 @@ function viewAllRoles() {
   );
 };
 
-// TODO: addEmployee()
-//APPROACH 2
-
-// function addEmployee() {
-//   //Make SQL statement:
-//   let sql = "INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ?";
-
-//   // Questions
-//   let questions = [{
-//       type: "input",
-//       message: "What's the employee's first name?",
-//       name: "first_name"
-//     },
-//     {
-//       type: "input",
-//       message: "What's the employee's last name?",
-//       name: "last_name"
-//     },
-//     {
-//       type: "input",
-//       message: "What is the ID of this employee's title (role_id)?",
-//       name: "roles_id"
-//     },
-//     {
-//       type: "input",
-//       message: "What is the ID of this employee's manager (manager_id)?",
-//       name: "manager_id"
-//     }
-//   ];
-
-//   //TODO: this is hard-coded right now. Revisit and make this dynamic from the prompt answers
-//   //Make an array of values:
-//   let values = [
-//     ["John", "Jacob", 1, 1]
-//   ];
-
-//   // INQUIRER QUESTIONS
-//   inquirer.prompt(questions).then(function (res) {
-//     //Execute the SQL statement, with the value array:
-//     db.query(sql, [values], function (err, res) {
-//       if (err) throw err;
-//       console.table(res);
-//       startApp();
-//     });
-//   });
-
-// };
-
-//TODO: NEW ADD EMPLOYEE APPROACH
-//APPROACH 3
+//ADD EMPLOYEE (this approach finally works)
 function addEmployee() {
-  db.query("SELECT title FROM roles", function (err, res) {
+  db.query("SELECT * FROM roles", function (err, res) {
     if (err) throw err;
-
+    console.log(res)
     const roles = res.map(element => element.title)
     inquirer.prompt([
       {
         name: "first_name",
         type: "input",
         message: "What's the employee's first name?",
-      },{
+      }, {
         name: "last_name",
         type: "input",
         message: "What's the employee's last name?",
@@ -179,28 +130,26 @@ function addEmployee() {
         choices: roles
       }
     ]).then(answers => {
+      console.log("roles", answers.roles);
       const chosenRole = res.find(element => {
         return element.title === answers.roles
       });
-      console.log(chosenRole.id);
+      console.log(chosenRole.roles_id);
       const newEmployee = {
         first_name: answers.first_name,
         last_name: answers.last_name,
-        roles_id: chosenRole.id
+        roles_id: chosenRole.roles_id
       };
-      db.query("INSERT INTO employee SET ?", newEmployee, (err, success) => {
-        if (err) throw err;
-        console.log(`${newEmployee.first_name} was added successfully`);
+      db.query(`INSERT INTO employee (first_name, last_name, roles_id) VALUES ('${answers.first_name}', '${answers.last_name}', '${chosenRole.roles_id}');`, (err, success) => {
+        console.log(`${newEmployee.first_name}, ${newEmployee.last_name}, ${chosenRole.roles_id} has successfully been added to the employee database.`);
         startApp();
-      })
+      });
 
     })
 
   })
 
 };
-
-
 // TODO: updateEmployee()
 function updateEmployee() {
   console.log("updateEmployee function has been triggered")
@@ -221,31 +170,51 @@ function addRole() {
 
 // TODO: addDepartment()
 // APPROACH 2 (STILL NOT WORKING)
-function addDepartment() {
-  db.query("SELECT * FROM department", function (err, res) {
-    if (err) throw err;
-    const department = res.map(element => {
-      return element.id
-    })
-    inquirer
-      .prompt([
-        {
-          name: "name",
-          type: "input",
-          message: "What is the name of this new department?",
-        }
+// function addDepartment() {
+//   db.query("SELECT * FROM department", function (err, res) {
+//     if (err) throw err;
+//     const department = res.map(element => {
+//       return element.id
+//     })
+//     inquirer
+//       .prompt([
+//         {
+//           name: "name",
+//           type: "input",
+//           message: "What is the name of this new department?",
+//         }
 
-      ])
-      .then(function (answer) {
-        db.query(
-          "INSERT INTO department SET ?",
-          answer,
-          function (err) {
-            if (err) throw err;
-            console.log(`${answer.department} was added successfully`);
-            startApp();
-          }
-        );
-      });
-  })
-}
+//       ])
+//       .then(function (answer) {
+//         db.query(
+//           "INSERT INTO department SET ?",
+//           answer,
+//           function (err) {
+//             if (err) throw err;
+//             console.log(`${answer.department} was added successfully`);
+//             startApp();
+//           }
+//         );
+//       });
+//   })
+// }
+
+function addDepartment() {
+  inquirer
+    .prompt({
+      type: "input",
+      message: "What would you like to name the new department?",
+      name: "department"
+    })
+    .then(function(answer) {
+        console.log(answer.department);
+      db.query("INSERT INTO department SET ?",
+        {
+          name: answer.department,
+        },
+        function(err, res) {
+          if (err) throw err;
+          startApp();
+        });
+    });
+};

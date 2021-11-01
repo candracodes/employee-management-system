@@ -1,4 +1,5 @@
 -- CREATE STARTER DATA TO GO INSIDE TABLES --
+USE company_db;
 
 INSERT INTO department (name) VALUES 
 ('Management'), 
