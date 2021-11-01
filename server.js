@@ -109,50 +109,6 @@ function viewAllRoles() {
 };
 
 // TODO: addEmployee()
-//APPROACH 1
-// function addEmployee() {
-//   //Make SQL statement:
-//   let sql = "INSERT INTO employee (first_name, last_name, roles_id, manager_id) VALUES ?";
-
-//   // Questions
-//   let questions = [
-//     {
-//       type: "input",
-//       message: "What's the employee's first name?",
-//       name: "first_name"
-//     },
-//     {
-//       type: "input",
-//       message: "What's the employee's last name?",
-//       name: "last_name"
-//     },
-//     {
-//       type: "input",
-//       message: "What is the ID of this employee's title (role_id)?",
-//       name: "roles_id"
-//     },
-//     {
-//       type: "input",
-//       message: "What is the ID of this employee's manager (manager_id)?",
-//       name: "manager_id"
-//     }
-//   ];
-
-//   //TODO: this is hard-coded right now. Revisit and make this dynamic from the prompt answers
-//   //Make an array of values:
-//   let values = [
-//     ["John", "Jacob", 1, 1]
-//   ];
-
-//   //Execute the SQL statement, with the value array:
-//   db.query(sql, [values], function (err, res) {
-//     if (err) throw err;
-//     console.table(res);
-//     startApp();
-//   });
-
-// };
-
 //APPROACH 2
 
 // function addEmployee() {
@@ -244,6 +200,7 @@ function addEmployee() {
 
 };
 
+
 // TODO: updateEmployee()
 function updateEmployee() {
   console.log("updateEmployee function has been triggered")
@@ -263,28 +220,7 @@ function addRole() {
 
 
 // TODO: addDepartment()
-// APPROACH 1
-// function addDepartment() {
-//   console.log("addDepartment function has been triggered")
-//   inquirer
-//     .prompt({
-//       type: "input",
-//       message: "What is the name of this new department?",
-//       name: "department"
-//     })
-//     .then(function (answer) {
-//       // TODO: Figure out why this isn't inserting into db
-//       db.query("INSERT INTO department SET ?", {
-//           name: answer.department,
-//         },
-//         function (err, res) {
-//           if (err) throw err;
-//           startApp();
-//         });
-//     });
-// };
-
-//TODO: APPROACH 2 (STILL NOT WORKING)
+// APPROACH 2 (STILL NOT WORKING)
 function addDepartment() {
   db.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
