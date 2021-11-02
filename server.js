@@ -210,74 +210,62 @@ function addRole() {
 function updateEmployee() {
   console.log("updateEmployee function has been triggered");
 
-  // First... select an employee to update.
-  // 1) Query the database for all employees
+  // 1) First... select an employee to update by querying the database for all employees:
   db.query(
     "SELECT employee.employee_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
 
     function (err, res) {
       if (err) throw err;
-      // Create a variable that will combine the first and last names together and base it on employee_id
+      // 2) Create a variable that will combine the first and last names together and base it on employee_id
       let employeeChoices = res.map((employee) => ({
         name: employee.first_name + ' ' + employee.last_name,
         value: employee.employee_id
       }))
-      // 2) Use Inquirer to have the user select one of the employees
+      // 3) Use Inquirer to have the user select one of the employees
       inquirer
         .prompt({
           type: "list",
           message: "What is the first name of the employee you would like to access?",
           name: "id",
           choices: employeeChoices
-        })
+        }) //END prompt
         .then(function (answer) {
             console.log(answer.id);
-            // 1) Query our database for all roles (again)
+            // 4) Query our database for all roles (again)
             db.query(
               "SELECT employee.employee_id, employee.first_name, employee.last_name, employee.roles_id, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
 
               function (err, res) {
                 if (err) throw err;
-
-                /*
-                TODO: I suspect the below variable is the problem. I need to create an array of strings rather than an array of objects. Question is... HOW?
-                I need to figure out the logic of setting up the variable this way:
-
-                let roleChoices = res.map((employee) => (
-                  [
-                    "employee.roles_id",
-                    "employee.employee_id"
-                  ]
-                )) 
-
-                But I need to figure out a way to extract that data and make it dynamic
-                */
                 console.log(res);
+                // 5) THIS!!! This is the variable that effed me up. So rather than setting it up how I had it initially, I really only want to search for the roles_id... I don't need the other stuff yet
                 let roleChoices = res.map((employee) => employee.roles_id);
-                console.log("RoleChoices at line 252: " + roleChoices);
-                // 2) Use Inquirer to have the user select a role from the list
+
+                // 6) Use Inquirer to have the user select a role from the list
                 inquirer
                   .prompt({
                     type: "list",
                     message: "Which role would you like to select?",
                     name: "id",
                     choices: roleChoices
-                  })
+                  }) //END prompt
+                  // Store the answer from that previously asked question (ans2) to use in the UPDATE query
                   .then(function (ans2) {
-                    // do stuff
+                    
                     console.log("The current roleChoices are: " + roleChoices);
+
                     // NOTE: ans2 is the stored response from the "Which role would you like to select" prompt, and answer is the stored response for the selected employee prompt
                     db.query("UPDATE employee SET roles_id = ? WHERE employee_id = ?", [ans2.id, answer.id]);
+
+                    // Go back to the original line of questioning
                     startApp();
                   
-                  })
-
-
+                  }) //end THEN
 
               }) // end function (err,res)
           },
 
-        ); // END db.query
+        ); // END then (answer...)
 
     })
 };
