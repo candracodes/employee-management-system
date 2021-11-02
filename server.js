@@ -210,21 +210,18 @@ function addRole() {
 function updateEmployee() {
   console.log("updateEmployee function has been triggered");
 
-  // First we must select an employee to update. To accomplish this, we need to do a few things
-  // 1) Query our database for all employees
-
+  // First... select an employee to update.
+  // 1) Query the database for all employees
   db.query(
     "SELECT employee.employee_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
 
     function (err, res) {
       if (err) throw err;
-
-      let employeeChoices = res.map((employee) => (
-        {
-          name: employee.first_name + ' ' + employee.last_name,
-          value: employee.employee_id
-        })
-      )
+      // Create a variable that will combine the first and last names together and base it on employee_id
+      let employeeChoices = res.map((employee) => ({
+        name: employee.first_name + ' ' + employee.last_name,
+        value: employee.employee_id
+      }))
       // 2) Use Inquirer to have the user select one of the employees
       inquirer
         .prompt({
@@ -234,36 +231,53 @@ function updateEmployee() {
           choices: employeeChoices
         })
         .then(function (answer) {
-          console.log(answer.id);
-          // Next we need to select a new role for the employee. This will be similar to the last step
-          // 1) Query our database for all roles
-          db.query(
-            "SELECT employee.employee_id, employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
+            console.log(answer.id);
+            // 1) Query our database for all roles (again)
+            db.query(
+              "SELECT employee.employee_id, employee.first_name, employee.last_name, employee.roles_id, roles.title, roles.salary, department.name, manager_id FROM employee INNER JOIN roles ON employee.roles_id = roles.roles_id INNER JOIN department ON roles.department_id = department.department_id;",
 
-          function (err, res) {
-            if (err) throw err;
-      
-            let roleChoices = res.map((employee) => (
-              {
-                name: employee.roles_id,
-                id: employee.employee_id
-              })
-            )
-          // 2) Use Inquirer to have the user select a role from the list
-          inquirer
-        .prompt({
-          type: "list",
-          message: "Which role would you like to select?",
-          name: "id",
-          choices: roleChoices
-        }),
-        //The sql query might look something like "UPDATE employee SET roles_id = 2 WHERE id = 1"
-        db.query("UPDATE employee SET roles_id = ? WHERE employee_id = ?", [roleChoices.roles_id, roleChoices.employee_id])
+              function (err, res) {
+                if (err) throw err;
 
-          
-        }) // end function (err,res)
-    }, 
+                /*
+                TODO: I suspect the below variable is the problem. I need to create an array of strings rather than an array of objects. Question is... HOW?
+                I need to figure out the logic of setting up the variable this way:
 
-  ); // END db.query
+                let roleChoices = res.map((employee) => (
+                  [
+                    "employee.roles_id",
+                    "employee.employee_id"
+                  ]
+                )) 
 
-})}; 
+                But I need to figure out a way to extract that data and make it dynamic
+                */
+                console.log(res);
+                let roleChoices = res.map((employee) => employee.roles_id);
+                console.log("RoleChoices at line 252: " + roleChoices);
+                // 2) Use Inquirer to have the user select a role from the list
+                inquirer
+                  .prompt({
+                    type: "list",
+                    message: "Which role would you like to select?",
+                    name: "id",
+                    choices: roleChoices
+                  })
+                  .then(function (ans2) {
+                    // do stuff
+                    console.log("The current roleChoices are: " + roleChoices);
+                    // NOTE: ans2 is the stored response from the "Which role would you like to select" prompt, and answer is the stored response for the selected employee prompt
+                    db.query("UPDATE employee SET roles_id = ? WHERE employee_id = ?", [ans2.id, answer.id]);
+                    startApp();
+                  
+                  })
+
+
+
+              }) // end function (err,res)
+          },
+
+        ); // END db.query
+
+    })
+};
