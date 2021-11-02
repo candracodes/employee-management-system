@@ -16,11 +16,11 @@ This is a command-line application that manages a company's employee database, u
 
 ## URLs
 - [GitHub Repo URL](https://github.com/candracodes/employee-management-system)
-- [Walk Through Video](#)
+- [Walk Through Video](https://watch.screencastify.com/v/F3M4f8uijuJ0xqXmyYjH)
 - [Full Acceptance Criteria](./assets/README.md)
 
 ## Usage
-- This application is invoked running `node server.js` into the command line
+- This application is invoked running `npm start` into the command line
 
 ## User-Story
 

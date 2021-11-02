@@ -60,7 +60,7 @@ function startApp() {
           addDepartment();
           break;
         case "Exit":
-          connection.end();
+          db.end();
           break;
       }
     });

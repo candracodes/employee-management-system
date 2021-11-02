@@ -9,7 +9,7 @@ CREATE TABLE department (
   name VARCHAR(30) NOT NULL
 );
 
--- TODO: I'm changing this table to "roles" because for some reason "role" is highlighted... as if it is a global attribute. --
+-- I'm changing this table to "roles" because for some reason "role" was highlighted... as if it is a global attribute. --
 CREATE TABLE roles (
     roles_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
